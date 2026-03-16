@@ -91,6 +91,12 @@ std::shared_ptr<RequestExecutor::Response> RequestExecutor::executeOnce(const St
     body->declareHeaders(bodyHeaders);
   }
 
+  if(bodyHeaders.getSize() > 0) {
+    for(const auto& pair : bodyHeaders.getAll_Unsafe()) {
+      headers.append(pair.first.toString(), pair.second.toString());
+    }
+  }
+
   if(m_verbose) {
     curl_easy_setopt(curl->getEasyHandle(), CURLOPT_VERBOSE, 1L);
   }
@@ -182,6 +188,12 @@ RequestExecutor::executeOnceAsync(const String& method,
       if(m_body) {
         m_body->declareHeaders(bodyHeaders);
         curl_easy_setopt(m_curl->getEasyHandle(), CURLOPT_UPLOAD, 1L);
+      }
+
+      if(bodyHeaders.getSize() > 0) {
+        for(const auto& pair : bodyHeaders.getAll_Unsafe()) {
+          m_curlHeaders.append(pair.first.toString(), pair.second.toString());
+        }
       }
 
     }
