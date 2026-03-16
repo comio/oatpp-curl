@@ -183,7 +183,6 @@ RequestExecutor::executeOnceAsync(const String& method,
 
       curl_easy_setopt(m_curl->getEasyHandle(), CURLOPT_URL, url->c_str());
       curl_easy_setopt(m_curl->getEasyHandle(), CURLOPT_CUSTOMREQUEST, method->c_str());
-      curl_easy_setopt(m_curl->getEasyHandle(), CURLOPT_HTTPHEADER, m_curlHeaders.getCurlList());
 
       if(m_body) {
         m_body->declareHeaders(bodyHeaders);
@@ -195,6 +194,8 @@ RequestExecutor::executeOnceAsync(const String& method,
           m_curlHeaders.append(pair.first.toString(), pair.second.toString());
         }
       }
+
+      curl_easy_setopt(m_curl->getEasyHandle(), CURLOPT_HTTPHEADER, m_curlHeaders.getCurlList());
 
     }
 
